@@ -9,7 +9,7 @@ function m2s(a, b)
   end
 end
 
-function coder(input_code, verbose)
+function coder(input_code)
   register = {0, 0, 0}
   result = {}
   states = {}
@@ -17,9 +17,6 @@ function coder(input_code, verbose)
   for i, code_digit in ipairs(input_code) do
     register[#register+1] = code_digit
     state = register[#register-1]..register[#register-2]
-    if verbose then
-      print(i..'-ое состояние - '..state)
-    end
     states[#states + 1] = state
 
     result1 = m2s(m2s(register[#register], register[#register-1]), register[#register-2])
