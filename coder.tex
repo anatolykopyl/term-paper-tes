@@ -1,38 +1,42 @@
-\begin{tikzpicture}[x=1.2cm, y=-1cm]
-  \node at (-0.5,0) [left] {$s_1=00$};
-  \node at (-0.5,1) [left] {$s_2=10$};
-  \node at (-0.5,2) [left] {$s_3=01$};
-  \node at (-0.5,3) [left] {$s_4=11$};
+\begin{figure}[H]
+  \begin{tikzpicture}[x=1.2cm, y=-1cm]
+    \node at (-0.5,0) [left] {$s_1=00$};
+    \node at (-0.5,1) [left] {$s_2=10$};
+    \node at (-0.5,2) [left] {$s_3=01$};
+    \node at (-0.5,3) [left] {$s_4=11$};
 
-  % Nodes
-  \foreach \x in {0,...,9} {
-    \node at (\x,-.7) {$\x$};
-    \foreach \y in {0,...,3} {
-      \node (s\x\y) at (\x,\y) [circle,fill=black,scale=0.7] {};
+    % Nodes
+    \foreach \x in {0,...,9} {
+      \node at (\x,-.7) {$\x$};
+      \foreach \y in {0,...,3} {
+        \node (s\x\y) at (\x,\y) [circle,fill=black,scale=0.7] {};
+      }
     }
-  }
 
-  % Edges
-  \trellisEdges{0}{0}
-  \trellisEdges{1}{0}
-  \trellisEdges{1}{1}
-  \foreach \x in {2,...,8} {
-    \foreach \y in {0,...,3} {
-      \trellisEdges{\x}{\y}
+    % Edges
+    \trellisEdges{0}{0}
+    \trellisEdges{1}{0}
+    \trellisEdges{1}{1}
+    \foreach \x in {2,...,8} {
+      \foreach \y in {0,...,3} {
+        \trellisEdges{\x}{\y}
+      }
     }
-  }
 
-  % Inputs and Outputs
-  \node at (-0.5,4) [left] {Входной бит};
-  \node at (-0.5,5) [left] {Результат};
+    % Inputs and Outputs
+    \node at (-0.5,4) [left] {Входной бит};
+    \node at (-0.5,5) [left] {Результат};
 
-  \trellisInOut{0}{0.5}{1}{11}
-  \trellisInOut{1}{1.5}{0}{10}
-  \trellisInOut{2}{1.5}{1}{00}
-  \trellisInOut{3}{2}{1}{01}
-  \trellisInOut{4}{3}{1}{10}
-  \trellisInOut{5}{3}{1}{10}
-  \trellisInOut{6}{2.5}{0}{01}
-  \trellisInOut{7}{1}{0}{11}
-  \trellisInOut{8}{0.5}{1}{11}
-\end{tikzpicture}
+    \trellisInOut{0}{0.5}{1}{11}
+    \trellisInOut{1}{1.5}{0}{10}
+    \trellisInOut{2}{1.5}{1}{00}
+    \trellisInOut{3}{2}{1}{01}
+    \trellisInOut{4}{3}{1}{10}
+    \trellisInOut{5}{3}{1}{10}
+    \trellisInOut{6}{2.5}{0}{01}
+    \trellisInOut{7}{1}{0}{11}
+    \trellisInOut{8}{0.5}{1}{11}
+  \end{tikzpicture}
+
+  \caption{Решетка кодера} \label{fig:coder}
+\end{figure}
