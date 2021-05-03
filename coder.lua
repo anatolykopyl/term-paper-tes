@@ -1,4 +1,4 @@
-input_code = {1, 0, 1, 1, 1, 1, 0, 0, 1}
+input_code = {1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0}
 
 -- Logical sum
 function m2s(a, b)
@@ -26,6 +26,10 @@ function coder(input_code)
   end
 
   return result, states
+end
+
+function decoder(input_code)
+
 end
 
 result, states = coder(input_code)

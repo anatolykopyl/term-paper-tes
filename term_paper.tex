@@ -13,9 +13,11 @@
 \usetikzlibrary{shapes.misc}
 \usepackage{pdflscape}
 \usepackage{float}
+\usepackage{pgfplots}
 
 \DeclareSymbolFont{T2Aletters}{T2A}{cmr}{m}{it}
 \graphicspath{ {./images/} }
+\pgfplotsset{width=10cm,compat=1.9}
 
 % Установки для отрисовки решеток кодера
 \tikzstyle{lightedge}=[dashed]
@@ -56,16 +58,115 @@
 
 
 \author{Анатолий Копыл}
-\title{Курсовая работа}
+\title{Расчёт основных характеристик цифровой системы связи с использованием квадратурной модуляции}
 
 \begin{document}
 
+% НАЧАЛО ТИТУЛЬНОГО ЛИСТА
+\makeatletter
+\begin{titlepage}
+  \begin{center}
+    \hfill \break
+    \footnotesize{ФЕДЕРАЛЬНОЕ ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ ОБРАЗОВАТЕЛЬНОЕ УЧРЕЖДЕНИЕ}\\ 
+    \footnotesize{ВЫСШЕГО ПРОФЕССИОНАЛЬНОГО ОБРАЗОВАНИЯ}\\
+    \small{\textbf{«Санкт-Петербургский государственный университет телекоммуникаций им. проф. М. А. Бонч-Бруевича»}}\\
+    \hfill \break
+    \normalsize{Факультет инфокоммуникационных сетей и систем}\\
+    \hfill \break
+    \normalsize{Кафедра теоретических основ связи и радиотехники}\\
+    \hfill\break
+    \hfill \break
+    \hfill \break
+    \hfill \break
+    \large{ \@title }\\
+    \hfill \break
+    \hfill \break
+    \normalsize{Учебная дисциплина <<Теория электрической связи>>}\\
+    \hfill \break
+    \hfill \break
+    \hfill \break
+    \normalsize{Курсовая работа}\\
+    \hfill \break
+    \hfill \break
+  \end{center}
+    
+  \hfill \break
+  \hfill \break
+  
+  \normalsize{
+    \hfill\begin{minipage}{\dimexpr\textwidth-6cm}
+      Студент группы ИКТО-91 Копыл А. В.\\
+      зачетная книжка № 1905141\\\\
+      Руководитель \underline{\hspace{4cm}}
+    \end{minipage}
+  }\\
+  \vfill
+  \begin{center} Санкт-Петербург 2021 \end{center}
+  \thispagestyle{empty} % выключаем отображение номера для этой страницы
+\end{titlepage}
+\makeatother
+% КОНЕЦ ТИТУЛЬНОГО ЛИСТА
+  
+\newpage
+
+Цель курсовой работы -- изучить и разработать систему цифровой связи, 
+оптимальную в отношении флуктуационной помехи и исключающую появления 
+межсимвольной помехи.
+
+\section{Структурная схема системы\\цифровой связи}
+
+Система связи предназначена для передачи аналоговых сообщений
+по цифровому каналу связи.
+\begin{figure}[H]
+  \includegraphics[scale=0.5]{struct_scheme}
+  \caption{Структурная схема цифровой системы связи}
+  \label{fig:struct_scheme}
+\end{figure}
+
+В систему входят следующие функциональные узлы с последующими назначениями:
+\begin{enumerate}
+  \item Источник сообщений -- создает реализации $a(t)$ случайного
+  процесса $A(t)$.
+  \item Аналого-цифровой преобразователь -- преобразует аналоговый
+  сигнал от источника сообщения в последовательность 
+  двоичных отсчетов $b(t)$.
+  \item Кодер -- включает в цифровой поток от АЦП дополнительные
+  символы, предназначенные для повышения помехоустойчивости системы
+  связи;
+  \item Формирователь модулирующих символов -- служит для получения
+  модулирующих сигналов $I(t)$ и $Q(t)$, соответствующих заданному
+  виду модуляции;
+  \item Сглаживающие формирующие фильтры (СФФ1, СФФ2);
+  \item Перемножители -- для получения БМ сигналов: синфазного 
+  $I(t)\cos{\omega_Ct}$ и квадратурного $Q(t)\sin{\omega_Ct}$.
+  \item Фазовращатель -- для получения второго несущего колебания, 
+  ортогонального по отношению к первому;
+  \item Генератор гармонических колебаний -- для получения несущего  
+  колебания;
+  \item Инвертор;
+  \item Сумматор -- для объединения синфазного и квадратурного 
+  сигналов в единый сигнал с квадратурной модуляцией 
+  $S_{КАМ}(t) = I(t)\cos{\omega_Ct} + Q(t)\sin{\omega_Ct}$;
+  \item Непрерывный канал -- среда распространения сигнала 
+  $S_{КАМ}(t)$;
+  \item Демодулятор -- для анализа приходящего сигнала, 
+  искаженного помехами, и принятии решения о переданном сообщении; 
+  \item Преобразователь параллельного кода в последовательный код --
+  для преобразования сигнала с выхода демодулятора в 
+  последовательный формат кодовых комбинаций;
+  \item Декодер -- для исправления части ошибок, возникших при приёме 
+  сообщения $\hat{b}(t)$ вследствие влияния помех; 
+  \item Цифро-аналоговый преобразователь -- для восстановления  
+  аналоговой формы сигнала $\hat{a}(t)$ из его цифрового представления;
+  \item Получатель сообщений.
+\end{enumerate}
+
 \section{Исходные данные}
-\[ m=41 \]
+$m=41$
 \begin{center}
   \begin{tabular}{ | p{5cm} | p{5cm} | p{5cm} | } 
     \hline
-    Предельные уровни аналогового сигнала \(a_{min}\), \(a_{max}\) (В) & \(a_{max}=25,6\) В;\newline\(a_{min}=-25,6\) В & Внести свои данные \\
+    Предельные уровни аналогового сигнала \(a_{мин}\), \(a_{макс}\) (В) & \(a_{макс}=25,6\) В;\newline\(a_{мин}=-25,6\) В & Внести свои данные \\
     \hline
     Верхняя частота спектра аналогового сигнала \(f_В\) & \(f_В =(1+m\cdot 10^{-2})\cdot 10^4\) & \(f_В =14100\) \\ 
     \hline
@@ -73,20 +174,207 @@
     \hline
     Спектральная плотность мощности флуктуационной помехи & 41 & \(N_0=2,3\cdot 10^{-7}\, В^2/Гц\)\\
     \hline
-    q - номер тактового интервала ошибки & \(q=m\mod{3}+1\) & \(q=3\)\\
+    q -- номер тактового интервала ошибки & \(q=m\mod{3}+1\) & \(q=3\)\\
     \hline
     Вид модуляции & КАМ-16 & \\
     \hline
   \end{tabular}
 \end{center}
 
-\section{Аналого-цифровой преобразователь}
+\section{Расчет составляющих системы цифровой связи}
+
+\subsection{Источник сообщений}
+Источник сообщения (ИС) вырабатывает реализации $a(t)$ стационарного
+случайного процесса $A(t)$, типа квазибелого шума с параметрами 
+$a_{мин}$, $a_{макс}$ и $f_В$. Мгновенные значения сообщения
+равновероятны в интервале от значения $a_{мин}$ и до значения 
+$a_{макс}$.
+
+Требуется:
+\begin{enumerate}
+  \item Написать аналитические выражения для плотности вероятности 
+  $w(а)$ мгновенных значений сообщения, функции распределения $F(a)$ и
+  построить их графики (рис. \ref{fig:prob_plots}).
+
+  \[ w(a)=\frac{1}{a_{макс}-a_{мин}}=\frac1\Delta=\frac{1}{25,6+25,6}=0,02 \]
+  \[ F(a)=\int^a_{-\infty}w(a)da=
+  \int^a_{a_{мин}}\frac{1}{\Delta}da=
+  \begin{cases}
+    1, & a > a_{макс}\\
+    \frac{a-a_{мин}}{\Delta}, & a_{мин} \leq a \leq a_{макс}\\
+    0, & a < a_{мин}
+  \end{cases}\]
+  где $\Delta = a_{макс}-a_{мин}=51,2\, В$.
+
+  % Графики
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \pgfmathsetmacro{\amin}{-25.6}
+      \pgfmathsetmacro{\amax}{25.6}
+      \begin{axis}[
+        width=6cm,height=4cm,
+        axis lines = left,
+        xlabel = $a$,
+        ylabel = {$F(a)$},
+        xmin=-40, xmax=40,
+        ymin=0, ymax=1.25,
+      ]
+        \addplot [
+          domain=-40:\amin, 
+          color=red,
+        ]
+        {0};
+        \addplot [
+          domain=\amin:\amax,
+          samples=2,
+          color=red,
+        ]
+        {(x-\amin) / 51.2};
+        \addplot [
+          domain=\amax:40, 
+          color=red,
+        ]
+        {1};
+      \end{axis}
+    \end{tikzpicture}%
+    \begin{tikzpicture}
+      \pgfmathsetmacro{\amin}{-25.6}
+      \pgfmathsetmacro{\amax}{25.6}
+      \begin{axis}[
+        width=6cm,height=4cm,
+        axis lines = left,
+        xlabel = $a$,
+        ylabel = {$w(a)$},
+        xmin=-40, xmax=40,
+        ymin=0, ymax=0.03,
+      ]
+        \addplot [
+          domain=-40:\amin, 
+          color=blue,
+        ]
+        {0};
+        \addplot [
+          domain=\amin:\amax,
+          samples=2,
+          color=blue,
+        ]
+        {0.02};
+        \addplot [
+          domain=\amax:40, 
+          color=blue,
+        ]
+        {0};
+        \draw [dashed] (axis cs:\amin,0) -- (axis cs:\amin,0.02);
+        \draw [dashed] (axis cs:\amax,0) -- (axis cs:\amax,0.02);
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Графики функции распределения и плотности вероятности}
+    \label{fig:prob_plots}
+  \end{figure}
+  \item Рассчитать математическое ожидание $\overline{A(t)}$ и 
+  дисперсию $D\{A(t)\}$ сообщения $A(t)$.
+  \[ \overline{A(t)}=\int^\infty_{-\infty}a\cdot w(a)da=
+  \int^{a_{макс}}_{a_{мин}}a \frac{1}{a_{макс}-a_{мин}} da=
+  \frac{a^2}{2\Delta} \Biggr|^{a_{макс}}_{a_{мин}}\! =
+  \frac{a_{макс}^2-a_{мин}^2}{2\Delta}=0 \]
+
+  \begin{align*}\begin{split}
+    D\{A(t)\}&=\int^\infty_{-\infty}(a-\overline{A(t)})^2 w(a)da=
+    \int^{a_{макс}}_{a_{мин}}a^2w(a)da\\
+    &=\frac{a^3}{3\Delta}\Biggr|^{a_{макс}}_{a_{мин}}\!
+    =\frac{a_\text{min}^2+a_\text{max}a_\text{min}+a_\text{max}^2}{3}
+    =218,5
+  \end{split}\end{align*}
+  \item Написать аналитическое выражение для спектральной плотности
+  мощности $G_A(f)$ сообщения $A(t)$ и построить график 
+  (рис. \ref{fig:spectr_plot}).
+  \[ G_A(f)=\frac{D\{A(t)\}}{2f_В}=\frac{218,5}{2\cdot1,41\cdot 10^4}
+  =7,7 \,мВ^2/Гц \]
+  \[ G_A(f)=\begin{cases}
+    7,7 \,мВ^2/Гц, & |f| \leq f_B\\
+    0, & |f| > f_B
+  \end{cases} \]
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \pgfmathsetmacro{\fv}{14100}
+      \pgfmathsetmacro{\Gaf}{0.0077}
+      \begin{axis}[
+        width=6cm,height=4cm,
+        axis lines = left,
+        ylabel = {$G_A(f)$},
+        xmin=-\fv*1.5, xmax=\fv*1.5,
+        ymin=0, ymax=\Gaf*1.5,
+      ]
+        \addplot [
+          domain=-\fv*1.5:-\fv, 
+          color=blue,
+        ]
+        {0};
+        \addplot [
+          domain=-\fv:\fv,
+          samples=2,
+          color=blue,
+        ]
+        {\Gaf};
+        \addplot [
+          domain=\fv:\fv*1.5, 
+          color=blue,
+        ]
+        {0};
+        \draw [dashed] (axis cs:-\fv,0) -- (axis cs:-\fv,\Gaf);
+        \draw [dashed] (axis cs:\fv,0) -- (axis cs:\fv,\Gaf);
+      \end{axis}
+    \end{tikzpicture}
+    \caption{График спектральной плотности мощности.}
+    \label{fig:spectr_plot}
+  \end{figure}
+  \item Найти аналитическое выражение для корреляционной функции
+  $B_A(\tau)$ сообщения $A(t)$ и построить график 
+  (рис. \ref{fig:coorel_plot}). 
+  По форме графика $B_A(\tau)$ определить, 
+  является ли сообщение $A(t)$ эргодическим случайным процессом 
+  или не является таковым.
+
+  \begin{align*}\begin{split}
+    B_A(\tau)&=\int^\infty_{-\infty}\frac{G_A(f)}{2}e^{j2\pi f\tau}df
+    =\int^{f_B}_{-f_B}\frac{G_A}{2}\cos{2\pi f\tau}df\\
+    &=\frac{G_A}2 \frac{\sin{2\pi f \tau}}{2\pi \tau}\Biggr|^{f_B}_{-f_B} 
+    =G_A\frac{\sin{2\pi f_B \tau}}{2\pi\tau}
+  \end{split}\end{align*}
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \pgfmathsetmacro{\PI}{3.14159}
+      \pgfmathsetmacro{\fv}{14100}
+      \pgfmathsetmacro{\Ga}{0.0077}
+      \begin{axis}[
+        width=10cm,height=6cm,
+        axis lines = left,
+        ylabel = {$B_A(\tau)$},
+        xlabel = {$\tau$},
+      ]
+        \addplot [
+          color=blue,
+          samples=100,
+          domain=-0.01:0.01,
+        ]
+        {\Ga*(sin(2*\PI*\fv*x))/(2*\PI*x)};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{График корреляционной функции $B_A(\tau)$.}
+    \label{fig:coorel_plot}
+  \end{figure}
+\end{enumerate}
+
+\subsection{Аналого-цифровой преобразователь}
 \[ \Delta t \leq \frac{1}{2f_B}=\frac1 {2\cdot 14100} = 3,546\cdot 10^{-5}\, с \]
 \[ f_d=\frac{1}{\Delta t}\geq 2f_B=\frac{1}{3,546\cdot 10^{-5}}=28200 \]
 \[ 377_{10}=101111001_2 \]
 \[ k=9;\, L=2^9 = 512 \]
 
-\section{Кодер}
+\subsection{Кодер}
 \begin{center}
   \includegraphics[scale=0.8]{coder}
 
@@ -99,7 +387,7 @@
   \end{tabular}
 \end{center}
 
-\subsection{Решетка кодера}
+\subsubsection{Решетка кодера}
 
 \input{coder}
 
@@ -107,13 +395,16 @@
 \[T_В=\frac{\Delta t}{2k}=\frac{3,546\cdot 10^{-5}}{2\cdot 9}=
 1,97\cdot 10^{-6}\,с\]
 
-\section{Декодер}
+\subsection{Декодер}
 По каналу передавался код \(\overline{u}=11 10 00 01 10 10 01 11 11\).
 Ошибка произошла на тактовом интервале \(q=3\).
 Таким образом, на вход декодера поступает последовательность 
-\(\overline{Z}=11 \dot{0}0 00 01 10 10 01 11 11\). Точкой обозначен ошибочно принятый символ.
+\(\overline{Z}=11 \overset{\times}{0} 0 00 01 10 10 01 11 11\). Крестиком обозначен ошибочно принятый символ.
 
-\subsection{Диаграмма декодера}
+\subsubsection{Диаграмма декодера}
 \input{decoder}
+
+Наложив полученный путь на решетку кодера, узнаем декодированное слово.
+$\overline{m}_{получ}=101111001$
 
 \end{document}
