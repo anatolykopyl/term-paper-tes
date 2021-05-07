@@ -1,0 +1,28 @@
+\begin{figure}[H]
+  \begin{tikzpicture}[x=1cm, y=-1cm]
+    \node at (-0.5,0) [left] {$s_1=00$};
+    \node at (-0.5,1) [left] {$s_2=10$};
+    \node at (-0.5,2) [left] {$s_3=01$};
+    \node at (-0.5,3) [left] {$s_4=11$};
+
+    % Nodes
+    \foreach \x in {0,...,12} {
+      \node at (\x,-.7) {$\x$};
+      \foreach \y in {0,...,3} {
+        \node (s\x\y) at (\x,\y) [circle,fill=black,scale=0.7] {};
+      }
+    }
+
+    % Edges
+    \trellisEdges{0}{0}
+    \trellisEdges{1}{0}
+    \trellisEdges{1}{1}
+    \foreach \x in {2,...,11} {
+      \foreach \y in {0,...,3} {
+        \trellisEdges{\x}{\y}
+      }
+    }
+  \end{tikzpicture}
+
+  \caption{Решетка кодера} \label{fig:coder_empty}
+\end{figure}

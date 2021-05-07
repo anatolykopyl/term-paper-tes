@@ -1,2 +1,4 @@
 *.aux
 *.log
+*.pgf-plot.*
+.DS_Store

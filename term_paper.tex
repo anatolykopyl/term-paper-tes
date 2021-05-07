@@ -17,7 +17,7 @@
 
 \DeclareSymbolFont{T2Aletters}{T2A}{cmr}{m}{it}
 \graphicspath{ {./images/} }
-\pgfplotsset{width=10cm,compat=1.9}
+\pgfplotsset{compat=newest}
 
 % Установки для отрисовки решеток кодера
 \tikzstyle{lightedge}=[dashed]
@@ -603,8 +603,10 @@ $L=2^k$, где $k$ -- целое число.
   блока ФМС, соответствующие входной реализации $c(t)$. 
   Написать аналитические выражения для случайных процессов 
   $I(t)$ и $Q(t)$.
-  \[ I(t)=\sum^\infty_{n=-\infty}I_n\cdot g_2(t-nT_S);\,
-  Q(t)=\sum^\infty_{n=-\infty}Q_n\cdot g_2(t-nT_S), \]
+  \begin{equation} \label{eq:ItQt}
+  I(t)=\sum^\infty_{n=-\infty}I_n\cdot g_2(t-nT_S);\,
+  Q(t)=\sum^\infty_{n=-\infty}Q_n\cdot g_2(t-nT_S),
+  \end{equation}
   где $g_(t)$ -- прямоугольный импульс длительностью 
   $T_S=4T_B$. $T_S$ -- символьный интервал; 
   $T_B$ -- бинарный интервал;
@@ -868,6 +870,315 @@ $L=2^k$, где $k$ -- целое число.
   Выходной спектр уже, поскольку функция $G(\omega)$ равна
   0 при значениях $\omega = n/T$, а $T_S=4T_B$, поэтому
   изгибы встречаются в 4 раза чаще.
+\end{enumerate}
+
+\subsection{Модулятор}
+В состав модулятора структурной схемы цифровой системы связи (ЦСС), 
+рис. \ref{fig:struct_scheme}, между блоками ФМС и перемножителями 
+входят сглаживающие формирующие фильтры СФФ, необходимые для 
+оптимизации ЦСС в отношении межсимвольной помехи, а также инвертор и 
+сумматор, на выходе которого получаем сигнал заданного вида модуляции.
+
+\subsubsection{Сглаживающий формирующий фильтр}
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.6]{modulator}
+  \caption{Структурная схема модулятора}
+  \label{fig:modulator}
+\end{figure}
+Требуется:
+\begin{enumerate}
+  \item Изобразить структурную схему модулятора в составе ЦСС 
+  (рис. \ref{fig:modulator}).
+
+  \item Написать аналитические выражения для сигнала $x(t)$ 
+  со <<спектром приподнятого косинуса>> (импульса Найквиста) 
+  и его спектральной плотности $S_x(f)$ для значений коэффициента 
+  сглаживания $0\leq \beta \leq 1$. Изобразить графики сигналов 
+  $x(t)$ и соответствующие спектральные плотности 
+  при $0\leq \beta \leq 1$.
+
+  Импульсы Найквиста $x(t)$ и их спектральные плотности $S_x(f)$
+  характеризуются следующими аналитическими выражениями:
+  \begin{equation} \label{eq:imp_niq}
+    x(t)=\frac{\sin(\frac{\pi\cdot t}{T})}{\frac{\pi\cdot t}{T}}
+    \cdot\frac{\cos(\frac{\pi\beta t}{T})}{1-\frac{4\beta^2 t^2}{T^2}}; 
+  \end{equation}
+
+  \begin{equation}  
+    S_x(f)=\begin{cases}
+      T, & 0\leq |f|\leq\dfrac{1-f}{2T};\\[10pt]
+      \dfrac{T}{2}\cdot\biggr\{1+\cos\biggr[\dfrac{\pi T}{\beta}
+      \cdot\biggr(|f|-\dfrac{1-\beta}{2T}\biggr)\biggr]\biggr\}, &
+      \biggr(\dfrac{1-f}{2T}\biggr)\leq|f|\leq 
+      \biggr(\dfrac{1+f}{2T}\biggr);\\[10pt]
+      0, & |f|>\dfrac{1+f}{2T},
+    \end{cases}
+  \end{equation}
+  где $\beta$ -- коэффициент сглаживания (или ската), который 
+  может принимать значения в интервале $0\leq \beta \leq 1$.
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.13]{Raised-cosine-impulse}
+    \caption{График импульсов Найквиста $x(t)$} 
+    \label{fig:imp_niq}
+  \end{figure}
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.13]{Raised_cosine_filter}
+    \caption{График спектральных плотностей $S_x(f)$}
+  \end{figure}
+
+  \item На одном рисунке изобразить графики спектральных плотностей 
+  $S_x(\omega)$ и $S_{x1}(\omega)$ сигналов $x(t)$ и $x_1(t)$, 
+  где $x(t)$ -- импульс Найквиста при коэффициенте сглаживания 
+  $\beta=1$; $x_1(t)$ – импульс со спектральной плотностью 
+  $S_{x1}(\omega)=\sqrt{S_x(\omega)}$.
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \pgfmathsetmacro{\PI}{3.14}
+      \pgfmathsetmacro{\T}{1.8}
+      \begin{axis}[
+        width=10cm,height=6cm,
+        axis lines = left,
+        ylabel = {$S(\omega)$},
+        xlabel = {$\omega$},
+        domain=-32:32,
+      ]
+        \addplot [
+          color=blue,
+          samples=100,
+        ]
+        {\T/2*(1+cos(\PI*\T*abs(x)))};
+        \addlegendentry{$S_x(\omega)$};
+        \addplot [
+          color=red,
+          samples=100,
+        ]
+        {sqrt(\T/2*(1+cos(\PI*\T*abs(x))))};
+        \addlegendentry{$S_{x1}(\omega)$};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Графики спектральных плотностей 
+    $S_x(\omega)$ и $S_{x1}(\omega)$ сигналов $x(t)$ и $x_1(t)$}
+  \end{figure}
+
+  \item На одном рисунке изобразить графики импульсов 
+  $x(t)$ и $x_1(t)$.
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \pgfmathsetmacro{\PI}{3.14}
+      \pgfmathsetmacro{\T}{1}
+
+      \begin{axis}[
+        width=10cm,height=6cm,
+        axis lines = left,
+        ylabel = {$x(t)$},
+        xlabel = {$t$},
+        domain = -2:2,
+      ]
+        \addplot [no markers] gnuplot [
+          color=blue,
+          samples=100,
+        ]
+        {sin(\PI*x/\T)/\PI/x*\T*cos(\PI*x/\T)/(1-4*x^2/\T^2)};
+        \addlegendentry{$x(t)$};
+        \addplot [no markers] gnuplot [
+          color=red,
+          samples=100,
+        ]
+        {sin(\PI*x*1.27/\T)/\PI/x*1.27*\T*cos(\PI*x*1.27/\T)/(1-4*(x*1.27)^2/\T^2)};
+        \addlegendentry{$x_1(t)$};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Импульс Найквиста $x(t)$ и искомый импульс $x_1(t)$}
+  \end{figure}
+  \item Написать аналитические выражения для случайных процессов 
+  $I_ф(t)$ и $Q_ф(t)$.
+  \[ I_ф(t)=\sum^\infty_{n=-\infty}I_ng_3(t-nT), \]
+  где $i_n$ -- детерминированная величина, которая является 
+  реализацией случайной величины $I_n$. 
+  Величины $i_n$ в выражениях для $i(t)$ и $i_ф(t)$ 
+  принимают одинаковые значения на соответствующих символьных 
+  интервалах $T$.
+
+  \[ Q_ф(t)=\sum^\infty_{n=-\infty}Q_ng_3(t-nT), \]
+  где $I_n(t)$ и $Q_n(t)$ -- независимые случайные величины, 
+  принимающие известные дискретные значения с заданными 
+  вероятностями, какие они имеют в формулах (\ref{eq:ItQt});
+
+  $g_3(t)=x_{1н}(t-3T)$ -- детерминированный импульс,
+  спектральная плотность которого выражается через спектральную 
+  плотность импульса Найквиста.
+
+  \item Написать аналитические выражения для корреляционных функций
+  и спектральных плотностей мощности случайных процессов 
+  $I_ф(t)$ и $Q_ф(t)$ и построить графики этих функций.
+
+  \begin{equation}
+    B_{I_ф}(\tau)=\frac{\overline{I_n^2}}{1,27^2}\cdot x(\tau),
+  \end{equation}
+  где $\overline{I^2_n}=5h^2$ для КАМ-16;
+
+  $x(\tau)$ -- импульс Найквиста при значении $\beta=1$.
+
+  Так как случайный процесс $Q_ф(t)$ на выходе нижнего сглаживающего 
+  формирующего фильтра (СФФ) имеет такие же вероятностные 
+  характеристики, как и процесс $I_ф(t)$, то можно написать 
+  следующие равенства:
+  \begin{equation}
+      B_{Q_ф}(\tau)=B_{I_ф}(\tau);\,
+      G_{Q_ф}(\omega)=G_{I_ф}(\omega).
+  \end{equation}
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \pgfmathsetmacro{\PI}{3.14}
+      \pgfmathsetmacro{\T}{1}
+
+      \begin{axis}[
+        width=10cm,height=6cm,
+        axis lines = left,
+        ylabel = {$B(\tau)$},
+        xlabel = {$\tau$},
+        domain = -2:2,
+      ]
+        \addplot [no markers] gnuplot [
+          color=blue,
+          samples=100,
+        ]
+        {sin(\PI*x/\T)/\PI/x*\T*cos(\PI*x/\T)/(1-4*x^2/\T^2)};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{График корреляционных функций 
+    $B_{I_ф}(\tau)$ и $B_{Q_ф}(\tau)$
+    случайных процессов $I_ф(t)$ и $Q_ф(t)$}
+  \end{figure}
+  \begin{equation}
+    G_{I_ф}(\omega)=\begin{cases}
+      \dfrac{\overline{I^2_n}}{1,27^2}\cdot\dfrac T2
+      \biggr[1+\cos\biggr(\omega\dfrac T2\biggr)\biggr],
+      &|\omega|\leq \dfrac{2\pi}{T};\\[14pt]
+      0, & |\omega|>\dfrac{2\pi}{T}.
+    \end{cases}
+  \end{equation}
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \pgfmathsetmacro{\PI}{3.14}
+      \pgfmathsetmacro{\T}{1.8}
+      \begin{axis}[
+        width=10cm,height=6cm,
+        axis lines = left,
+        ylabel = {$S(\omega)$},
+        xlabel = {$\omega$},
+        domain=-32:32,
+      ]
+        \addplot [
+          color=blue,
+          samples=100,
+        ]
+        {\T/2*(1+cos(\PI*\T*abs(x)))};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{График спектральных плотностей мощности
+    $G_{I_ф}(\omega)$ и $G_{Q_ф}(\omega)$}
+  \end{figure}
+\end{enumerate}
+
+\subsubsection{Блоки перемножителей, инвертор, сумматор}
+Требуется:
+\begin{enumerate}
+  \item Написать аналитические выражения для корреляционных функций
+  $B_{I_ф\cos}(\tau)$ и $B_{Q_ф\sin}(\tau)$ случайных сигналов
+  $I_ф(t)\cdot\cos(\omega_Ct+\varphi_C)$ и 
+  $Q_ф(t)\cdot\sin(\omega_Ct+\varphi_C)$ на выходах перемножителей,
+  где $\varphi_C$ -- случайная фаза с равномерной плотностью 
+  вероятности на интервале $0...2\pi$. 
+  Случайная фаза $\varphi_C$ не зависит от случайных процессов 
+  $I_ф(t)$ и $Q_ф(t)$.
+
+  \begin{equation}
+    B_{I_ф\cos}(\tau)=B_{Q_ф\sin}(\tau)=\frac 12B_{I_ф}(\tau)\cdot\cos\omega_c\tau,
+  \end{equation}
+  где $\tau=(t_2-t_1)$.
+
+  \item Написать аналитические выражения для корреляционных 
+  функций $B_S(\tau)=B_{I_ф}(\tau)\cdot\cos\omega_C\tau
+  =B_{Q_ф}(\tau)\cdot\cos\omega_C\tau$ и для спектральной
+  плотности мощности $G_S(\omega)$ сигнала $S(t)$ на
+  выходе сумматора. Построить графики этих функций.
+  \begin{equation} \label{eq:BSTau}
+    B_S(\tau)=\overline{I^2_n}\cdot\frac{1}{1,27^2}\cdot x(\tau)
+    \cdot\cos\omega_C\tau,
+  \end{equation}
+  где $x(\tau)$ -- импульс Найквиста, определяемый 
+  (\ref{eq:imp_niq}) при $\beta=1$ (рис. \ref{fig:imp_niq});
+
+  $\overline{I^2_n}=5h^2$ для КАМ-16.
+  
+  Спектральная плотность мощности $G_S(\omega)$ случайного сигнала 
+  $S(t)$ в соответствии с теоремой Винера -- Хинчина определяется 
+  через преобразование Фурье корреляционной функции $B_S(\tau)$.
+  Используя (\ref{eq:BSTau}), получим:
+  \begin{equation}
+    \begin{split}
+      G_S(\omega)&=\int^\infty_{-\infty}B_{I_ф\cos}(\tau)
+      \cdot e^{-i\omega\tau}d\tau
+      =\overline{I^2_n}\cdot\frac{1}{1,27^2}
+      \int^\infty_{-\infty}x(\tau)\cdot\cos\omega_C\tau
+      \cdot e^{-i\omega\tau}d\tau\\
+      &=\frac 12 \cdot \frac{\overline{I^2_n}}{1,27^2}
+      [S_x(\omega-\omega_C)+S_x(\omega+\omega_C)],
+    \end{split}
+  \end{equation}
+  Учитывая, что функция $S_x(\omega)$ импульса Найквиста $x(t)$
+  при значении $\beta=1$ и $f=\frac{\omega}{2\pi}$ равна
+  \begin{equation}
+    S_x(\omega)=\begin{cases}
+      \dfrac T2\biggr(1+\cos\dfrac T2\omega\biggr), 
+      & |\omega|\leq\dfrac{2\pi}{T};\\[10pt]
+      0, & |\omega|>\dfrac{2\pi}{T}.
+    \end{cases}
+  \end{equation}
+  Спектральная плотность $G_S(\omega)$ на выходе сумматора будет 
+  равна удвоенной спектральной плотности $G_{I_ф\cos}(\omega)$.
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics{BSTau}
+    \caption{График корреляционной функции $B_S(\tau)$}
+  \end{figure}
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics{GSOmega}
+    \caption{Спектральные плотности мощности $G_S(\omega)$}
+  \end{figure}
+\end{enumerate}
+
+\subsection{Непрерывный канал}
+Передача сигнала $S(t)$ происходит по непрерывному неискажающему 
+каналу с постоянными параметрами в присутствии аддитивной помехи
+$n(t)$ типа гауссовского белого шума. Сигнал $Z(t)$ на выходе такого 
+канала имеет вид
+\begin{equation}
+  Z(t)=\mu\cdot S(t)+n(t),
+\end{equation}
+где $\mu=1$ -- коэффициент передачи канала. 
+
+Односторонняя спектральная плотность мощности помехи $n(t)$ 
+равна $N_0=2,3\cdot 10^{-7}\,В^2/Гц$.
+
+Требуется:
+\begin{enumerate}
+  
 \end{enumerate}
 
 \subsection{Декодер}
