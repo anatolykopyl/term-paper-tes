@@ -61,6 +61,10 @@
   \scriptsize{\begin{array}[b]{@{}c@{}}#1\\#2\end{array}}
 }
 
+\newcommand{\graxisX}{
+  \draw[ultra thin, gray] (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0) -- (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0)
+}
+
 
 \author{Анатолий Копыл}
 \title{Расчёт основных характеристик цифровой системы связи с использованием квадратурной модуляции}
@@ -203,14 +207,20 @@ $a_{макс}$.
   $w(а)$ мгновенных значений сообщения, функции распределения $F(a)$ и
   построить их графики (рис. \ref{fig:prob_plots}).
 
-  \[ w(a)=\frac{1}{a_{макс}-a_{мин}}=\frac1\Delta=\frac{1}{25,6+25,6}=0,02 \]
-  \[ F(a)=\int^a_{-\infty}w(a)da=
-  \int^a_{a_{мин}}\frac{1}{\Delta}da=
-  \begin{cases}
-    1, & a > a_{макс}\\
-    \frac{a-a_{мин}}{\Delta}, & a_{мин} \leq a \leq a_{макс}\\
-    0, & a < a_{мин}
-  \end{cases}\]
+  \begin{equation}
+    w(a)=\frac{1}{a_{макс}-a_{мин}}=\frac1\Delta=\frac{1}{25,6+25,6}=0,02 
+  \end{equation}
+
+  \begin{equation}
+    F(a)=\int^a_{-\infty}w(a)da=
+    \int^a_{a_{мин}}\frac{1}{\Delta}da=
+    \begin{cases}
+      1, & a > a_{макс}\\
+      \frac{a-a_{мин}}{\Delta}, & a_{мин} \leq a \leq a_{макс}\\
+      0, & a < a_{мин}
+    \end{cases}
+  \end{equation}
+
   где $\Delta = a_{макс}-a_{мин}=51,2\, В$.
 
   % Графики
@@ -281,27 +291,36 @@ $a_{макс}$.
   \end{figure}
   \item Рассчитать математическое ожидание $\overline{A(t)}$ и 
   дисперсию $D\{A(t)\}$ сообщения $A(t)$.
-  \[ \overline{A(t)}=\int^\infty_{-\infty}a\cdot w(a)da=
-  \int^{a_{макс}}_{a_{мин}}a \frac{1}{a_{макс}-a_{мин}} da=
-  \frac{a^2}{2\Delta} \Biggr|^{a_{макс}}_{a_{мин}}\! =
-  \frac{a_{макс}^2-a_{мин}^2}{2\Delta}=0 \]
+  \begin{equation}
+    \overline{A(t)}=\int^\infty_{-\infty}a\cdot w(a)da=
+    \int^{a_{макс}}_{a_{мин}}a \frac{1}{a_{макс}-a_{мин}} da=
+    \frac{a^2}{2\Delta} \Biggr|^{a_{макс}}_{a_{мин}}\! =
+    \frac{a_{макс}^2-a_{мин}^2}{2\Delta}=0 
+  \end{equation}
 
-  \begin{align*}\begin{split}
+
+  \begin{align}\begin{split}
     D\{A(t)\}&=\int^\infty_{-\infty}(a-\overline{A(t)})^2 w(a)da=
     \int^{a_{макс}}_{a_{мин}}a^2w(a)da\\
     &=\frac{a^3}{3\Delta}\Biggr|^{a_{макс}}_{a_{мин}}\!
     =\frac{a_\text{min}^2+a_\text{max}a_\text{min}+a_\text{max}^2}{3}
     =218,5
-  \end{split}\end{align*}
+  \end{split}\end{align}
   \item Написать аналитическое выражение для спектральной плотности
   мощности $G_A(f)$ сообщения $A(t)$ и построить график 
   (рис. \ref{fig:spectr_plot}).
-  \[ G_A(f)=\frac{D\{A(t)\}}{2f_В}=\frac{218,5}{2\cdot1,41\cdot 10^4}
-  =7,7 \,мВ^2/Гц \]
-  \[ G_A(f)=\begin{cases}
-    7,7 \,мВ^2/Гц, & |f| \leq f_B\\
-    0, & |f| > f_B
-  \end{cases} \]
+  \begin{equation}
+    G_A(f)=\frac{D\{A(t)\}}{2f_В}=\frac{218,5}{2\cdot1,41\cdot 10^4}
+    =7,7 \,мВ^2/Гц 
+  \end{equation}
+
+  \begin{equation}
+    G_A(f)=\begin{cases}
+      7,7 \,мВ^2/Гц, & |f| \leq f_B\\
+      0, & |f| > f_B
+    \end{cases} 
+  \end{equation}
+
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -344,12 +363,13 @@ $a_{макс}$.
   является ли сообщение $A(t)$ эргодическим случайным процессом 
   или не является таковым.
 
-  \begin{align*}\begin{split}
+  \begin{align}\begin{split}
     B_A(\tau)&=\int^\infty_{-\infty}\frac{G_A(f)}{2}e^{j2\pi f\tau}df
     =\int^{f_B}_{-f_B}\frac{G_A}{2}\cos{2\pi f\tau}df\\
     &=\frac{G_A}2 \frac{\sin{2\pi f \tau}}{2\pi \tau}\Biggr|^{f_B}_{-f_B} 
     =G_A\frac{\sin{2\pi f_B \tau}}{2\pi\tau}
-  \end{split}\end{align*}
+  \end{split}\end{align}
+
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -358,10 +378,16 @@ $a_{макс}$.
       \pgfmathsetmacro{\Ga}{0.0077}
       \begin{axis}[
         width=10cm,height=6cm,
-        axis lines = left,
+        axis lines = middle,
         ylabel = {$B_A(\tau)$},
         xlabel = {$\tau$},
+        scaled x ticks = false,
+        xtick = {0.00205, 0.0041},
+        xticklabels = {$\frac{1}{2f_B}$, $\frac{2}{2f_B}$},
+        ytick = {0},
+        yticklabels = {0},
       ]
+        \graxisX;
         \addplot [
           color=blue,
           samples=100,
@@ -393,8 +419,11 @@ $a(t)$ сообщения $A(t)$ по времени. В моменты врем
 мгновенных значений реализации $a(t)$. Расстояние
 между отсчетами равно интервалу $\Delta t$, величина которого
 определяется в соответствии с теоремой Котельникова:
-\[\Delta t \leq \frac{1}{2f_B};\, 
-f_d=\frac{1}{\Delta t}\geq2f_B\]
+\begin{equation}
+  \Delta t \leq \frac{1}{2f_B};\, 
+  f_d=\frac{1}{\Delta t}\geq2f_B
+\end{equation}
+
 где $f_d$ -- частота дискретизации.
 
 На втором этапе выполняется квантование точных отсчетов 
@@ -425,25 +454,52 @@ $L=2^k$, где $k$ -- целое число.
   \item Рассчитать интервал дискретизации $\Delta t$ для 
   получения непрерывных отсчетов $a(t_i)$ реализации 
   $a(t),\, t_i=i\cdot\Delta t,\, i=0,\pm1,\pm2,...$.
-  \[ \Delta t \leq \frac{1}{2f_B}=\frac1 {2\cdot 14100} = 3,546\cdot 10^{-5}\, с \]
+  \begin{equation}
+    \Delta t \leq \frac{1}{2f_B}=\frac1 {2\cdot 14100} = 3,546\cdot 10^{-5}\, с 
+  \end{equation}
+
   \item Рассчитать частоту дискретизации $f_d$.
-  \[ f_d=\frac{1}{\Delta t}\geq 2f_B=\frac{1}{3,546\cdot 10^{-5}}=28200 \]
+  \begin{equation}
+    f_d=\frac{1}{\Delta t}\geq 2f_B=\frac{1}{3,546\cdot 10^{-5}}=28200 
+  \end{equation}
+
   \item Определить число уровней квантования $L$.
-  \[ k=9;\, L=2^9 = 512 \]
+  \begin{equation}
+    k=9;\, L=2^9 = 512 
+  \end{equation}
+
   \item Рассчитать мощность шума квантования $P_{ШК}$
   и сравнить ее с мощностью непрерывного сообщения $A(t)$.
-  \[ P_{ШК}=\Delta a^2/12
-  =\frac{0,1^2}{12}=8,33\cdot10^{-4}\, В^2 \]
-  \[ P_{A(t)}=A^2(t)=1\, В^2\]
-  \[ P_{A(t)} >> P_{ШК} \]
+  \begin{equation}
+    P_{ШК}=\Delta a^2/12
+    =\frac{0,1^2}{12}=8,33\cdot10^{-4}\, В^2 
+  \end{equation}
+
+  \begin{equation}
+    P_{A(t)}=A^2(t)=1\, В^2
+  \end{equation}
+
+  \begin{equation}
+    P_{A(t)} >> P_{ШК} 
+  \end{equation}
+
   \item Найти минимальное число $k$ двоичных разрядов, 
   требуемое для записи в двоичной форме любого номера $j$ 
   из $L-1$ номеров уровней квантования.
-  \[ L-1=511_{10}=111111111_2 \]
-  \[ k_{люб}=9 \]
+  \begin{equation}
+    L-1=511_{10}=111111111_2 
+  \end{equation}
+
+  \begin{equation}
+    k_{люб}=9 
+  \end{equation}
+
   \item Записать $k$-разрядное двоичное число, 
   соответствующее заданному уровню квантования $j$.
-  \[ j=377_{10}=101111001_2 \]
+  \begin{equation}
+    j=377_{10}=101111001_2 
+  \end{equation}
+
   \item Начертить временную диаграмму отклика АЦП 
   $b_{АЦП}(t)$ на заданный уровень квантования $j$ 
   в виде последовательности импульсов, 
@@ -494,9 +550,11 @@ $L=2^k$, где $k$ -- целое число.
   \end{itemize}
 
   \item Структурная схема кодера.
-  \begin{center}
+  \begin{figure}[H]
+    \centering
     \includegraphics[scale=0.8]{coder2}
-  \end{center}
+    \caption{Структурная схема кодера}
+  \end{figure}
 
   \item Решетчатая диаграмма кодера.
   \input{coder_empty}
@@ -515,7 +573,10 @@ $L=2^k$, где $k$ -- целое число.
       \hline
     \end{tabular}
   \end{center}
-  \[ \overline u = 11 10 00 01 10 10 01 11 11 01 11 00 00 \]
+  \begin{equation}
+    \overline u = 11 10 00 01 10 10 01 11 11 01 11 00 00 
+  \end{equation}
+
 
   \item На решетчатой диаграмме кодера отметить путь, 
   соответствующий полученным КС.
@@ -584,12 +645,18 @@ $L=2^k$, где $k$ -- целое число.
     \caption{График реализации $c(t)$ с выхода сверточного кодера}
   \end{figure}
 
-  \[ C(t)=\sum^\infty_{n=-\infty}C_n\cdot g_1(t-nT_B) \]
+  \begin{equation}
+    C(t)=\sum^\infty_{n=-\infty}C_n\cdot g_1(t-nT_B) 
+  \end{equation}
+
   где $g_1(t)$ -- прямоугольный импульс длительностью $T_B$.
-  \[ g_1(t)=\begin{cases}
-    1\,В, & 0\leq t \leq T_B;\\
-    0\,В, & t<0,\,t>T_B,
-  \end{cases} \]
+  \begin{equation}
+    g_1(t)=\begin{cases}
+        1\,В, & 0\leq t \leq T_B;\\
+        0\,В, & t<0,\,t>T_B,
+      \end{cases} 
+  \end{equation}
+
   где $g_1(t-nT_B)$ -- прямоугольный импульс такой же формы, 
   как и $g_1(t)$, но сдвинутый вправо относительно импульса 
   $g_1(t)$ на величину $nT_B$, если $n>0$, или 
@@ -599,7 +666,9 @@ $L=2^k$, где $k$ -- целое число.
   случайной величины $C_n$ на $n$-интервале $T_B$.
   Величина $C_n$ принимает два дискретных значения $h(B)$ и 
   $-h(B)$ с вероятностью $0,5$ каждое, \mbox{т. е.} 
-  \[ P(h)=P(-h)=0,5. \]
+  \begin{equation}
+    P(h)=P(-h)=0,5. 
+  \end{equation}
 
   Если в заданной реализации $c(t)$ на $n$-интервале передается 
   информационный символ «1», то $c_n=h(B)$, 
@@ -611,16 +680,19 @@ $L=2^k$, где $k$ -- целое число.
   Написать аналитические выражения для случайных процессов 
   $I(t)$ и $Q(t)$.
   \begin{equation} \label{eq:ItQt}
-  I(t)=\sum^\infty_{n=-\infty}I_n\cdot g_2(t-nT_S);\,
-  Q(t)=\sum^\infty_{n=-\infty}Q_n\cdot g_2(t-nT_S),
+    I(t)=\sum^\infty_{n=-\infty}I_n\cdot g_2(t-nT_S);\,
+    Q(t)=\sum^\infty_{n=-\infty}Q_n\cdot g_2(t-nT_S),
   \end{equation}
   где $g_(t)$ -- прямоугольный импульс длительностью 
   $T_S=4T_B$. $T_S$ -- символьный интервал; 
   $T_B$ -- бинарный интервал;
-  \[ g_2(t)=\begin{cases}
-    1\,В, & 0\leq t \leq T_B;\\
-    0\,В, & t<0,\,t>T_B,
-  \end{cases} \]
+  \begin{equation}
+    g_2(t)=\begin{cases}
+      1\,В, & 0\leq t \leq T_B;\\
+      0\,В, & t<0,\,t>T_B,
+    \end{cases} 
+  \end{equation}
+
   где $g_2(t-nT_S)$ -- прямоугольный импульс такой же формы, 
   как и $g_2(t)$, но сдвинутый вправо относительно импульса 
   $g_2(t)$ на величину $nT_S$, если $n>0$, или 
@@ -631,7 +703,10 @@ $L=2^k$, где $k$ -- целое число.
   которые согласно сигнальному созвездию (рис. \ref{fig:cam_16})
   принимают четыре дискретных значения 
   $-3h,\, -h,\, h,\, 3h$ с вероятностью 0,25 каждое, т. е.
-  \[ P(-3h)=P(-h)=P(h)=P(3h)=0,25. \]
+  \begin{equation}
+    P(-3h)=P(-h)=P(h)=P(3h)=0,25. 
+  \end{equation}
+
 
   \begin{figure}[H]
     \centering
@@ -679,15 +754,21 @@ $L=2^k$, где $k$ -- целое число.
   и построить графики этих функций.
 
   Процесс $C(t)$ является случайным синхронным телеграфным сигналом. Его корреляционная функция имеет вид:
-  \[ B_C(\tau)=\begin{cases}
-    h^2(1-\frac{|\tau|}{T}),&|\tau|\leq T\\
-    0, & |\tau| > T
-  \end{cases}, \]
+  \begin{equation}
+    B_C(\tau)=\begin{cases}
+      h^2(1-\frac{|\tau|}{T}),&|\tau|\leq T\\
+      0, & |\tau| > T
+    \end{cases}, 
+  \end{equation}
+
   а спектральная плотность мощности
-  \[ G_C(\omega)
-  =\int^\infty_{-\infty}B_C(\tau)e^{-i\omega\tau}d\tau
-  =\int^\infty_{-\infty}B_C(\tau)\cos{\omega\tau}d\tau
-  =T\cdot h^2\cdot\frac{\sin^2(\frac{\omega T}{2})}{(\frac{\omega T}{2})^2}, \]
+  \begin{equation}
+    G_C(\omega)
+      =\int^\infty_{-\infty}B_C(\tau)e^{-i\omega\tau}d\tau
+      =\int^\infty_{-\infty}B_C(\tau)\cos{\omega\tau}d\tau
+      =T\cdot h^2\cdot\frac{\sin^2(\frac{\omega T}{2})}{(\frac{\omega T}{2})^2}, 
+  \end{equation}
+
   где $T=T_B$ -- длительность тактового интервала.
   \begin{figure}[H]
     \centering
@@ -699,10 +780,15 @@ $L=2^k$, где $k$ -- целое число.
         axis lines = left,
         ylabel = {$B_C(\tau)$},
         xlabel = {$\tau$},
+        xtick={0},
+        xticklabels={$0$},
+        domain=-1.8:1.8,
+        ytick={0,0.98},
+        yticklabels={0,0.25},
       ]
         \addplot [
           color=blue,
-          samples=100,
+          samples=5,
         ]
         {\h^2*(1-abs(x)/\T)};
       \end{axis}
@@ -717,9 +803,14 @@ $L=2^k$, где $k$ -- целое число.
       \pgfmathsetmacro{\h}{1}
       \begin{axis}[
         width=10cm,height=6cm,
-        axis lines = left,
+        axis lines = middle,
         ylabel = {$G_C(\omega)$},
         xlabel = {$\omega$},
+        scaled y ticks = false,
+        ytick = {},
+        yticklabels = {},
+        xtick = {200, 400, -200, -400},
+        xticklabels = {$\frac{1}{T_B}$, $\frac{2}{T_B}$, $-\frac{1}{T_B}$, $-\frac{2}{T_B}$},
       ]
         \addplot [
           color=blue,
@@ -743,22 +834,34 @@ $L=2^k$, где $k$ -- целое число.
   мощности, поскольку они оба отличаются от процесса 
   $C(t)$ лишь длительностью сигнального интервала 
   $T_S=4T_B$.
-  \[ B_I(0)=B_Q(0)=D\{I(t)\}=D\{Q(t)\} \]
-  \[ G_I(0)=G_Q(0)=\frac{D\{I(t)\}}{T_S}=\frac{D\{Q(t)\}}{T_S} \]
-  \begin{align*}\begin{split}
+  \begin{equation}
+    B_I(0)=B_Q(0)=D\{I(t)\}=D\{Q(t)\} 
+  \end{equation}
+
+  \begin{equation}
+    G_I(0)=G_Q(0)=\frac{D\{I(t)\}}{T_S}=\frac{D\{Q(t)\}}{T_S} 
+  \end{equation}
+
+  \begin{align}\begin{split}
     D\{I(t)\}=D\{Q(t)\}&
     =\sum^4_{n=1}(i_n-\overline{I_n(t)})^2\cdot P(i_n)\\
     &=0,25(-3h)^2+0,25(-h)^2+0,25h^2+0,25(3h)^2=5h^2
-  \end{split}\end{align*}
+  \end{split}\end{align}
   Корреляционные функции:
-  \[ B_I(\tau)=B_Q(\tau)=\begin{cases}
-    5h^2(1-\frac{|\tau|}{T_B}), & |\tau|\leq T_B\\
-    0, & |\tau| > T_B
-  \end{cases} \]
+  \begin{equation}
+    B_I(\tau)=B_Q(\tau)=\begin{cases}
+      5h^2(1-\frac{|\tau|}{T_B}), & |\tau|\leq T_B\\
+      0, & |\tau| > T_B
+    \end{cases} 
+  \end{equation}
+
   Энергетический спектр:
-  \[ G_I(\omega)=G_Q(\omega)
-  =\int^\infty_{-\infty}B_C(\tau)e^{-i\omega\tau}d\tau
-  =T\cdot h^2\cdot\frac{\sin^2(\frac{\omega T}{2})}{(\frac{\omega T}{2})^2} \]
+  \begin{equation}
+    G_I(\omega)=G_Q(\omega)
+      =\int^\infty_{-\infty}B_C(\tau)e^{-i\omega\tau}d\tau
+      =T\cdot h^2\cdot\frac{\sin^2(\frac{\omega T}{2})}{(\frac{\omega T}{2})^2} 
+  \end{equation}
+
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -769,10 +872,15 @@ $L=2^k$, где $k$ -- целое число.
         axis lines = left,
         ylabel = {$B(\tau)$},
         xlabel = {$\tau$},
+        xtick={0},
+        xticklabels={$0$},
+        domain=-1.8:1.8,
+        ytick={0,0.98},
+        yticklabels={0,0.25},
       ]
         \addplot [
           color=red,
-          samples=100,
+          samples=5,
         ]
         {5*\h^2*(1-abs(x)/\T)};
       \end{axis}
@@ -791,6 +899,11 @@ $L=2^k$, где $k$ -- целое число.
         axis lines = left,
         ylabel = {$G(\omega)$},
         xlabel = {$\omega$},
+        scaled y ticks = false,
+        ytick = {},
+        yticklabels = {},
+        xtick = {50, 150, -50, -150},
+        xticklabels = {$\frac{1}{T_S}$, $\frac{3}{T_S}$, $-\frac{1}{T_S}$, $-\frac{3}{T_S}$},
       ]
         \addplot [
           color=red,
@@ -822,6 +935,10 @@ $L=2^k$, где $k$ -- целое число.
         axis lines = left,
         ylabel = {$B(\tau)$},
         xlabel = {$\tau$},
+        xtick={0},
+        xticklabels={$0$},
+        ytick={},
+        yticklabels={},
       ]
         \addplot [
           color=blue,
@@ -853,6 +970,11 @@ $L=2^k$, где $k$ -- целое число.
         axis lines = left,
         ylabel = {$G(\omega)$},
         xlabel = {$\omega$},
+        scaled y ticks = false,
+        ytick = {},
+        yticklabels = {},
+        xtick = {},
+        xticklabels = {},
       ]
         \addplot [
           color=blue,
@@ -954,7 +1076,11 @@ $L=2^k$, где $k$ -- целое число.
         axis lines = left,
         ylabel = {$S(\omega)$},
         xlabel = {$\omega$},
-        domain=-32:32,
+        domain = -32:32,
+        xtick = {0, 32, -32},
+        xticklabels = {0, $\frac{2\pi}{T}$, $-\frac{2\pi}{T}$},
+        ytick = {1.79, 1.35},
+        yticklabels = {$T$, $\sqrt T$},
       ]
         \addplot [
           color=blue,
@@ -968,6 +1094,8 @@ $L=2^k$, где $k$ -- целое число.
         ]
         {sqrt(\T/2*(1+cos(\PI*\T*abs(x))))};
         \addlegendentry{$S_{x1}(\omega)$};
+        \draw [dashed] (axis cs: \pgfkeysvalueof{/pgfplots/xmin},1.35) -- (axis cs: 0,1.35);
+        \draw [dashed] (axis cs: \pgfkeysvalueof{/pgfplots/xmin},1.79) -- (axis cs: 0,1.79);
       \end{axis}
     \end{tikzpicture}
     \caption{Графики спектральных плотностей 
@@ -989,6 +1117,10 @@ $L=2^k$, где $k$ -- целое число.
         ylabel = {$x(t)$},
         xlabel = {$t$},
         domain = -2:2,
+        xtick = {0, 1, -1},
+        xticklabels = {0, T, -T},
+        ytick = {0, 1, 1.6},
+        yticklabels = {0, 1, $\frac{1.27}{\sqrt T}$}
       ]
         \addplot [no markers] gnuplot [
           color=blue,
@@ -1002,20 +1134,29 @@ $L=2^k$, где $k$ -- целое число.
         ]
         {sin(\PI*x*1.27/\T)/\PI/x*1.27*\T*cos(\PI*x*1.27/\T)/(1-4*(x*1.27)^2/\T^2)};
         \addlegendentry{$x_1(t)$};
+
+        \draw [dashed] (axis cs: \pgfkeysvalueof{/pgfplots/xmin},1) -- (axis cs: 0,1);
+        \draw [dashed] (axis cs: \pgfkeysvalueof{/pgfplots/xmin},1.6) -- (axis cs: 0,1.6);
       \end{axis}
     \end{tikzpicture}
     \caption{Импульс Найквиста $x(t)$ и искомый импульс $x_1(t)$}
   \end{figure}
   \item Написать аналитические выражения для случайных процессов 
   $I_ф(t)$ и $Q_ф(t)$.
-  \[ I_ф(t)=\sum^\infty_{n=-\infty}I_ng_3(t-nT), \]
+  \begin{equation}
+    I_ф(t)=\sum^\infty_{n=-\infty}I_ng_3(t-nT), 
+  \end{equation}
+
   где $i_n$ -- детерминированная величина, которая является 
   реализацией случайной величины $I_n$. 
   Величины $i_n$ в выражениях для $i(t)$ и $i_ф(t)$ 
   принимают одинаковые значения на соответствующих символьных 
   интервалах $T$.
 
-  \[ Q_ф(t)=\sum^\infty_{n=-\infty}Q_ng_3(t-nT), \]
+  \begin{equation}
+    Q_ф(t)=\sum^\infty_{n=-\infty}Q_ng_3(t-nT), 
+  \end{equation}
+
   где $I_n(t)$ и $Q_n(t)$ -- независимые случайные величины, 
   принимающие известные дискретные значения с заданными 
   вероятностями, какие они имеют в формулах (\ref{eq:ItQt});
@@ -1055,6 +1196,10 @@ $L=2^k$, где $k$ -- целое число.
         ylabel = {$B(\tau)$},
         xlabel = {$\tau$},
         domain = -2:2,
+        xtick = {0, 1, -1, 2, -2},
+        xticklabels = {0, $T$, $-T$, $2T$, $-2T$},
+        ytick = {0, 0.98},
+        yticklabels = {0, $\frac{\overline{I^2_n}}{1.27^2}$},
       ]
         \addplot [no markers] gnuplot [
           color=blue,
@@ -1086,6 +1231,10 @@ $L=2^k$, где $k$ -- целое число.
         ylabel = {$S(\omega)$},
         xlabel = {$\omega$},
         domain=-32:32,
+        xtick = {0, 32, -32},
+        xticklabels = {0, $\frac{2\pi}{T}$, $-\frac{2\pi}{T}$},
+        ytick = {1.79},
+        yticklabels = {$\frac{\overline{I^2_n}\cdot T}{1.27^2}$},
       ]
         \addplot [
           color=blue,
