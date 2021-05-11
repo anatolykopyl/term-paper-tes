@@ -1,4 +1,8 @@
 *.aux
 *.log
 *.pgf-plot.*
+*.fdb_latexmk
+*.fls
+*.toc
+
 .DS_Store

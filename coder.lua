@@ -1,4 +1,4 @@
-input_code = {1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0}
+input_code = {1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0}
 
 -- Logical sum
 function m2s(a, b)
